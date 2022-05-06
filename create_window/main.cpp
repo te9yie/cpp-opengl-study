@@ -1,9 +1,10 @@
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <iostream>
 
-void error_callback(int err, const char *msg) {
-  std::cerr << "#" << err << ":" << msg << std::endl;
+void error_callback(int error, const char *description) {
+  std::cerr << "Error#" << error << ":" << description << std::endl;
 }
 
 int main() {
@@ -25,6 +26,11 @@ int main() {
   }
 
   glfwMakeContextCurrent(window);
+
+  if (auto r = glewInit(); r != GLEW_OK) {
+    std::cerr << "Error: " << glewGetErrorString(r) << std::endl;
+    return EXIT_FAILURE;
+  }
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
