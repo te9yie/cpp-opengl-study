@@ -26,6 +26,7 @@ int main() {
   }
 
   glfwMakeContextCurrent(window);
+  glfwSwapInterval(1);
 
   // clang-format off
   std::cout
