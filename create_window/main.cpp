@@ -2,10 +2,20 @@
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <iostream>
+#include <memory>
+
+namespace {
 
 void error_callback(int error, const char *description) {
   std::cerr << "Error#" << error << ":" << description << std::endl;
 }
+
+struct DestroyWindow {
+  void operator()(GLFWwindow *window) const { glfwDestroyWindow(window); }
+};
+using WindowPtr = std::unique_ptr<GLFWwindow, DestroyWindow>;
+
+} // namespace
 
 int main() {
   const char *TITLE = "Create Window";
@@ -19,13 +29,13 @@ int main() {
   }
   atexit(glfwTerminate);
 
-  auto window =
-      glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE, nullptr, nullptr);
-  if (!window) {
+  WindowPtr window{
+      glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE, nullptr, nullptr)};
+  if (!window.get()) {
     return EXIT_FAILURE;
   }
 
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(window.get());
   glfwSwapInterval(1);
 
   // clang-format off
@@ -42,11 +52,11 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(window.get())) {
     glClear(GL_COLOR_BUFFER_BIT);
     glFinish();
 
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(window.get());
 
     glfwPollEvents();
   }
