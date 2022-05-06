@@ -27,6 +27,15 @@ int main() {
 
   glfwMakeContextCurrent(window);
 
+  // clang-format off
+  std::cout
+      << "\nGL Vendor: " << glGetString(GL_VENDOR)
+      << "\nGL Renderer: " << glGetString(GL_RENDERER)
+      << "\nGL Version: " << glGetString(GL_VERSION)
+      << "\nGLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION)
+      << std::endl;
+  // clang-format on
+
   if (auto r = glewInit(); r != GLEW_OK) {
     std::cerr << "Error: " << glewGetErrorString(r) << std::endl;
     return EXIT_FAILURE;
